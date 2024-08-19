@@ -3,193 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OffsetsDB - White Theme</title>
+    <title>ESG Regulations Dashboard with AG Grid</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
             background-color: #ffffff;
             color: #333;
+            margin: 0;
+            padding: 0;
         }
 
         header {
             background-color: #f5f5f5;
-            color: #333;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
             padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
         }
 
-        .credits-info {
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        .tabs {
             display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
+            justify-content: center;
+            background-color: #f5f5f5;
             border-bottom: 1px solid #ddd;
             margin-bottom: 20px;
         }
 
-        .credits-info div {
-            font-size: 1.2em;
-        }
-
-        .bar {
-            height: 10px;
-            background: linear-gradient(90deg, #4CAF50 50%, #9C27B0 50%);
-            margin-top: 10px;
-        }
-
-        .filters {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .filter-item {
-            display: flex;
-            flex-direction: column;
-            font-size: 0.9em;
-        }
-
-        .filter-item select,
-        .filter-item input {
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-
-        .project-list {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-item {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .tabs button {
+            background-color: #f5f5f5;
+            border: none;
+            padding: 15px 20px;
             cursor: pointer;
+            font-size: 1em;
+            border-bottom: 2px solid transparent;
         }
 
-        .project-item:hover {
-            background-color: #f0f0f0;
+        .tabs button.active {
+            border-bottom: 2px solid #333;
         }
 
-        .project-details {
-            display: flex;
-            flex-direction: column;
+        .tab-content {
+            display: none;
+            padding: 20px;
         }
 
-        .project-details div {
-            margin-bottom: 5px;
+        .tab-content.active {
+            display: block;
         }
 
-        .project-credits {
-            font-size: 1.5em;
-            font-weight: bold;
-        }
-
-        @media (max-width: 768px) {
-            .filters {
-                flex-direction: column;
-            }
-
-            .filter-item {
-                margin-bottom: 10px;
-            }
+        .ag-theme-alpine {
+            height: 500px;
+            width: 100%;
         }
     </style>
+    <!-- Include AG Grid -->
+    <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
+    <link href="https://unpkg.com/ag-grid-community/styles/ag-grid.css" rel="stylesheet">
+    <link href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css" rel="stylesheet">
 </head>
 <body>
 
 <header>
-    <h1>OffsetsDB - White Theme</h1>
-    <p>This database collects and standardizes data about offset projects and offset credits issued by five of the largest offset registries.</p>
+    <h1>ESG Regulations Dashboard with AG Grid</h1>
 </header>
 
-<div class="container">
-    <div class="credits-info">
-        <div>CREDITS ISSUED: <strong>2.23B</strong></div>
-        <div>CREDITS RETIRED: <strong>1.19B</strong></div>
-    </div>
-    <div class="bar"></div>
-
-    <div class="filters">
-        <div class="filter-item">
-            <label for="registry">REGISTRY</label>
-            <select id="registry">
-                <option value="all">ALL</option>
-                <option value="acr">ACR</option>
-                <option value="art">ART</option>
-                <option value="car">CAR</option>
-                <option value="gld">GLD</option>
-                <option value="vcs">VCS</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <label for="category">CATEGORY</label>
-            <select id="category">
-                <option value="all">ALL</option>
-                <option value="forest">FOREST</option>
-                <option value="renewable">RENEWABLE ENERGY</option>
-                <option value="ghg">GHG MANAGEMENT</option>
-                <option value="energy">ENERGY EFFICIENCY</option>
-                <option value="fuel">FUEL SWITCHING</option>
-                <option value="agriculture">AGRICULTURE</option>
-                <option value="other">OTHER</option>
-            </select>
-        </div>
-        <div class="filter-item">
-            <label for="country">COUNTRY</label>
-            <input type="text" id="country" placeholder="SELECT COUNTRY">
-        </div>
-    </div>
-
-    <div class="project-list">
-        <div class="project-item">
-            <div class="project-details">
-                <div><strong>Project ID:</strong> ART102</div>
-                <div><strong>Name:</strong> Guyana</div>
-                <div><strong>Status:</strong> Registered</div>
-                <div><strong>Category:</strong> Forest</div>
-            </div>
-            <div class="project-credits">40.6M</div>
-        </div>
-
-        <div class="project-item">
-            <div class="project-details">
-                <div><strong>Project ID:</strong> VCS1477</div>
-                <div><strong>Name:</strong> Katingan Peatland Restoration</div>
-                <div><strong>Status:</strong> Registered</div>
-                <div><strong>Category:</strong> Forest</div>
-            </div>
-            <div class="project-credits">40.0M</div>
-        </div>
-
-        <div class="project-item">
-            <div class="project-details">
-                <div><strong>Project ID:</strong> VCS934</div>
-                <div><strong>Name:</strong> Mai Ndombe REDD+ Project</div>
-                <div><strong>Status:</strong> Registered</div>
-                <div><strong>Category:</strong> Forest</div>
-            </div>
-            <div class="project-credits">37.0M</div>
-        </div>
-
-        <!-- Add more project items as needed -->
-    </div>
+<div class="tabs">
+    <button class="tablink active" onclick="openTab(event, 'tab1')">ESG Regulations Tracker</button>
+    <button class="tablink" onclick="openTab(event, 'tab2')">Appendix</button>
 </div>
+
+<div id="tab1" class="tab-content active">
+    <div id="grid1" class="ag-theme-alpine"></div>
+</div>
+
+<div id="tab2" class="tab-content">
+    <div id="grid2" class="ag-theme-alpine"></div>
+</div>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.className += " active";
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Define column definitions for the first grid (ESG Regulations Tracker)
+        const columnDefs1 = [
+            { headerName: "Region", field: "Region" },
+            { headerName: "Jurisdiction", field: "Jurisdiction" },
+            { headerName: "Issue", field: "Issue" },
+            { headerName: "Regulation Type", field: "RegulationType" },
+            { headerName: "Name", field: "Name" },
+            { headerName: "Summary", field: "Summary" },
+            { headerName: "Authority", field: "Authority" },
+            { headerName: "Status", field: "Status" },
+            { headerName: "Year Announced", field: "YearAnnounced" }
+        ];
+
+        // Define column definitions for the second grid (Appendix)
+        const columnDefs2 = [
+            { headerName: "Name", field: "Name" },
+            { headerName: "Remit", field: "Remit" },
+            { headerName: "Materiality Approach", field: "MaterialityApproach" },
+            { headerName: "Focus", field: "Focus" },
+            { headerName: "Summary", field: "Summary" },
+            { headerName: "Status", field: "Status" },
+            { headerName: "Finalization Date", field: "FinalizationDate" },
+            { headerName: "Latest Update", field: "LatestUpdate" }
+        ];
+
+        // Sample data extracted from Excel sheets (You can replace these with your actual data)
+        const rowData1 = [
+            { Region: "Americas", Jurisdiction: "Argentina", Issue: "Governance", RegulationType: "Corporate ESG Disclosure", Name: "Corporate Governance Code", Summary: "Requires large listed companies to disclose governance information.", Authority: "National Securities Commission", Status: "Effective", YearAnnounced: "2007" },
+            { Region: "Americas", Jurisdiction: "Brazil", Issue: "Environmental, Social, Governance", RegulationType: "Corporate ESG Disclosure", Name: "Resolution no. 59", Summary: "Requires listed companies to disclose on ESG and governance topics.", Authority: "Securities and Exchange Commission", Status: "Effective", YearAnnounced: "2021" }
+        ];
+
+        const rowData2 = [
+            { Name: "IFRS Sustainability Standards", Remit: "Global", MaterialityApproach: "Double Materiality", Focus: "Environment & Social", Summary: "Sets standards for reporting ESG impacts globally.", Status: "In development", FinalizationDate: "2023", LatestUpdate: "2023" },
+            { Name: "TCFD Framework", Remit: "Global", MaterialityApproach: "Financial Materiality", Focus: "Climate", Summary: "Provides a global framework for climate-related financial disclosures.", Status: "Effective", FinalizationDate: "N/A", LatestUpdate: "2017" }
+        ];
+
+        // Create the first grid instance
+        new agGrid.Grid(document.getElementById('grid1'), {
+            columnDefs: columnDefs1,
+            rowData: rowData1,
+            defaultColDef: {
+                flex: 1,
+                minWidth: 100,
+                filter: true,
+                sortable: true,
+                resizable: true
+            }
+        });
+
+        // Create the second grid instance
+        new agGrid.Grid(document.getElementById('grid2'), {
+            columnDefs: columnDefs2,
+            rowData: rowData2,
+            defaultColDef: {
+                flex: 1,
+                minWidth: 100,
+                filter: true,
+                sortable: true,
+                resizable: true
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
