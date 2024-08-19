@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OffsetsDB - White Theme</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        header {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .credits-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .credits-info div {
+            font-size: 1.2em;
+        }
+
+        .bar {
+            height: 10px;
+            background: linear-gradient(90deg, #4CAF50 50%, #9C27B0 50%);
+            margin-top: 10px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .filter-item {
+            display: flex;
+            flex-direction: column;
+            font-size: 0.9em;
+        }
+
+        .filter-item select,
+        .filter-item input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .project-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-item {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .project-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .project-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-details div {
+            margin-bottom: 5px;
+        }
+
+        .project-credits {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-item {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>OffsetsDB - White Theme</h1>
+    <p>This database collects and standardizes data about offset projects and offset credits issued by five of the largest offset registries.</p>
+</header>
+
+<div class="container">
+    <div class="credits-info">
+        <div>CREDITS ISSUED: <strong>2.23B</strong></div>
+        <div>CREDITS RETIRED: <strong>1.19B</strong></div>
+    </div>
+    <div class="bar"></div>
+
+    <div class="filters">
+        <div class="filter-item">
+            <label for="registry">REGISTRY</label>
+            <select id="registry">
+                <option value="all">ALL</option>
+                <option value="acr">ACR</option>
+                <option value="art">ART</option>
+                <option value="car">CAR</option>
+                <option value="gld">GLD</option>
+                <option value="vcs">VCS</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="category">CATEGORY</label>
+            <select id="category">
+                <option value="all">ALL</option>
+                <option value="forest">FOREST</option>
+                <option value="renewable">RENEWABLE ENERGY</option>
+                <option value="ghg">GHG MANAGEMENT</option>
+                <option value="energy">ENERGY EFFICIENCY</option>
+                <option value="fuel">FUEL SWITCHING</option>
+                <option value="agriculture">AGRICULTURE</option>
+                <option value="other">OTHER</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="country">COUNTRY</label>
+            <input type="text" id="country" placeholder="SELECT COUNTRY">
+        </div>
+    </div>
+
+    <div class="project-list">
+        <div class="project-item">
+            <div class="project-details">
+                <div><strong>Project ID:</strong> ART102</div>
+                <div><strong>Name:</strong> Guyana</div>
+                <div><strong>Status:</strong> Registered</div>
+                <div><strong>Category:</strong> Forest</div>
+            </div>
+            <div class="project-credits">40.6M</div>
+        </div>
+
+        <div class="project-item">
+            <div class="project-details">
+                <div><strong>Project ID:</strong> VCS1477</div>
+                <div><strong>Name:</strong> Katingan Peatland Restoration</div>
+                <div><strong>Status:</strong> Registered</div>
+                <div><strong>Category:</strong> Forest</div>
+            </div>
+            <div class="project-credits">40.0M</div>
+        </div>
+
+        <div class="project-item">
+            <div class="project-details">
+                <div><strong>Project ID:</strong> VCS934</div>
+                <div><strong>Name:</strong> Mai Ndombe REDD+ Project</div>
+                <div><strong>Status:</strong> Registered</div>
+                <div><strong>Category:</strong> Forest</div>
+            </div>
+            <div class="project-credits">37.0M</div>
+        </div>
+
+        <!-- Add more project items as needed -->
+    </div>
+</div>
+
+</body>
+</html>
