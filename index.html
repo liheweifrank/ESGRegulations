@@ -59,6 +59,12 @@
             height: 500px;
             width: 100%;
         }
+
+        .flag-icon {
+            width: 30px;
+            height: 20px;
+            object-fit: cover;
+        }
     </style>
     <!-- Include AG Grid -->
     <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
@@ -102,18 +108,57 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+        // Custom renderer for displaying national flags in the Jurisdiction column
+        const flagRenderer = (params) => {
+            const country = params.value.toLowerCase();
+            return `<img class="flag-icon" src="https://flagcdn.com/${country}.svg" alt="${params.value}">`;
+        };
+
         // Define column definitions for the first grid (ESG Regulations Tracker)
         const columnDefs1 = [
             { headerName: "Region", field: "Region" },
-            { headerName: "Jurisdiction", field: "Jurisdiction" },
+            { headerName: "Jurisdiction", field: "Jurisdiction", cellRenderer: flagRenderer },
             { headerName: "Issue", field: "Issue" },
             { headerName: "Regulation Type", field: "RegulationType" },
             { headerName: "Name", field: "Name" },
-            { headerName: "Summary", field: "Summary" },
+            { headerName: "Summary", field: "Summary", hide: true },
             { headerName: "Authority", field: "Authority" },
             { headerName: "Status", field: "Status" },
             { headerName: "Year Announced", field: "YearAnnounced" }
         ];
+
+        // Sample data extracted from Excel sheets (You can replace these with your actual data)
+        const rowData1 = [
+            { Region: "Americas", Jurisdiction: "ar", Issue: "Governance", RegulationType: "Corporate ESG Disclosure", Name: "Corporate Governance Code", Summary: "Requires large listed companies to disclose governance information.", Authority: "National Securities Commission", Status: "Effective", YearAnnounced: "2007" },
+            { Region: "Americas", Jurisdiction: "br", Issue: "Environmental, Social, Governance", RegulationType: "Corporate ESG Disclosure", Name: "Resolution no. 59", Summary: "Requires listed companies to disclose on ESG and governance topics.", Authority: "Securities and Exchange Commission", Status: "Effective", YearAnnounced: "2021" }
+        ];
+
+        // Grid options including master/detail for expanding rows
+        const gridOptions1 = {
+            columnDefs: columnDefs1,
+            rowData: rowData1,
+            masterDetail: true,
+            detailCellRendererParams: {
+                detailGridOptions: {
+                    columnDefs: [
+                        { headerName: "Full Summary", field: "Summary", flex: 1 }
+                    ]
+                },
+                getDetailRowData: function (params) {
+                    params.successCallback([params.data]);
+                }
+            },
+            defaultColDef: {
+                flex: 1,
+                minWidth: 100,
+                filter: true,
+                sortable: true,
+                resizable: true
+            }
+        };
+
+        // Create the first grid instance
+        new agGrid.Grid(document.getElementById('grid1'), gridOptions1);
 
         // Define column definitions for the second grid (Appendix)
         const columnDefs2 = [
@@ -127,32 +172,13 @@
             { headerName: "Latest Update", field: "LatestUpdate" }
         ];
 
-        // Sample data extracted from Excel sheets (You can replace these with your actual data)
-        const rowData1 = [
-            { Region: "Americas", Jurisdiction: "Argentina", Issue: "Governance", RegulationType: "Corporate ESG Disclosure", Name: "Corporate Governance Code", Summary: "Requires large listed companies to disclose governance information.", Authority: "National Securities Commission", Status: "Effective", YearAnnounced: "2007" },
-            { Region: "Americas", Jurisdiction: "Brazil", Issue: "Environmental, Social, Governance", RegulationType: "Corporate ESG Disclosure", Name: "Resolution no. 59", Summary: "Requires listed companies to disclose on ESG and governance topics.", Authority: "Securities and Exchange Commission", Status: "Effective", YearAnnounced: "2021" }
-        ];
-
         const rowData2 = [
             { Name: "IFRS Sustainability Standards", Remit: "Global", MaterialityApproach: "Double Materiality", Focus: "Environment & Social", Summary: "Sets standards for reporting ESG impacts globally.", Status: "In development", FinalizationDate: "2023", LatestUpdate: "2023" },
             { Name: "TCFD Framework", Remit: "Global", MaterialityApproach: "Financial Materiality", Focus: "Climate", Summary: "Provides a global framework for climate-related financial disclosures.", Status: "Effective", FinalizationDate: "N/A", LatestUpdate: "2017" }
         ];
 
-        // Create the first grid instance
-        new agGrid.Grid(document.getElementById('grid1'), {
-            columnDefs: columnDefs1,
-            rowData: rowData1,
-            defaultColDef: {
-                flex: 1,
-                minWidth: 100,
-                filter: true,
-                sortable: true,
-                resizable: true
-            }
-        });
-
-        // Create the second grid instance
-        new agGrid.Grid(document.getElementById('grid2'), {
+        // Grid options for the second grid
+        const gridOptions2 = {
             columnDefs: columnDefs2,
             rowData: rowData2,
             defaultColDef: {
@@ -162,7 +188,10 @@
                 sortable: true,
                 resizable: true
             }
-        });
+        };
+
+        // Create the second grid instance
+        new agGrid.Grid(document.getElementById('grid2'), gridOptions2);
     });
 </script>
 
