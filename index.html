@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESG Regulations Dashboard with AG Grid</title>
+    <title>ESG Regulations Dashboard with DevExtreme DataGrid</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,26 +55,20 @@
             display: block;
         }
 
-        .ag-theme-alpine {
+        #gridContainer1, #gridContainer2 {
             height: 500px;
             width: 100%;
         }
-
-        .flag-icon {
-            width: 30px;
-            height: 20px;
-            object-fit: cover;
-        }
     </style>
-    <!-- Include AG Grid -->
-    <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.min.noStyle.js"></script>
-    <link href="https://unpkg.com/ag-grid-community/styles/ag-grid.css" rel="stylesheet">
-    <link href="https://unpkg.com/ag-grid-community/styles/ag-theme-alpine.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.1.3/css/dx.common.css">
+    <link rel="stylesheet" href="https://cdn3.devexpress.com/jslib/22.1.3/css/dx.light.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn3.devexpress.com/jslib/22.1.3/js/dx.all.js"></script>
 </head>
 <body>
 
 <header>
-    <h1>ESG Regulations Dashboard with AG Grid</h1>
+    <h1>ESG Regulations Dashboard</h1>
 </header>
 
 <div class="tabs">
@@ -83,11 +77,11 @@
 </div>
 
 <div id="tab1" class="tab-content active">
-    <div id="grid1" class="ag-theme-alpine"></div>
+    <div id="gridContainer1"></div>
 </div>
 
 <div id="tab2" class="tab-content">
-    <div id="grid2" class="ag-theme-alpine"></div>
+    <div id="gridContainer2"></div>
 </div>
 
 <script>
@@ -107,91 +101,58 @@
         evt.currentTarget.className += " active";
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Custom renderer for displaying national flags in the Jurisdiction column
-        const flagRenderer = (params) => {
-            const country = params.value.toLowerCase();
-            return `<img class="flag-icon" src="https://flagcdn.com/${country}.svg" alt="${params.value}">`;
-        };
+    var esgRegulationsData = [
+        {
+            ID: 1,
+            Region: "Americas",
+            Jurisdiction: "ar",
+            Issue: "Governance",
+            RegulationType: "Corporate ESG Disclosure",
+            Name: "Corporate Governance Code",
+            Authority: "National Securities Commission",
+            Status: "Effective",
+            YearAnnounced: "2007",
+            Summary: "Requires large listed companies to disclose governance information."
+        },
+        // More data objects as needed
+    ];
 
-        // Define column definitions for the first grid (ESG Regulations Tracker)
-        const columnDefs1 = [
-            { headerName: "Region", field: "Region" },
-            { headerName: "Jurisdiction", field: "Jurisdiction", cellRenderer: flagRenderer },
-            { headerName: "Issue", field: "Issue" },
-            { headerName: "Regulation Type", field: "RegulationType" },
-            { headerName: "Name", field: "Name" },
-            { headerName: "Summary", field: "Summary", hide: true },
-            { headerName: "Authority", field: "Authority" },
-            { headerName: "Status", field: "Status" },
-            { headerName: "Year Announced", field: "YearAnnounced" }
-        ];
+    $(function(){
+        $("#gridContainer1").dxDataGrid({
+            dataSource: esgRegulationsData,
+            keyExpr: "ID",
+            showBorders: true,
+            columns: [
+                { dataField: "Region", caption: "Region" },
+                { dataField: "Jurisdiction", caption: "Jurisdiction" },
+                { dataField: "Issue", caption: "Issue" },
+                { dataField: "RegulationType", caption: "Regulation Type" },
+                { dataField: "Name", caption: "Name" },
+                { dataField: "Authority", caption: "Authority" },
+                { dataField: "Status", caption: "Status" },
+                { dataField: "YearAnnounced", caption: "Year Announced" }
+            ],
+            masterDetail: {
+                enabled: true,
+                template: function(container, options) {
+                    var currentData = options.data;
+                    $("<div>")
+                        .addClass("master-detail-caption")
+                        .text("Details for " + currentData.Name)
+                        .appendTo(container);
 
-        // Sample data extracted from Excel sheets (You can replace these with your actual data)
-        const rowData1 = [
-            { Region: "Americas", Jurisdiction: "ar", Issue: "Governance", RegulationType: "Corporate ESG Disclosure", Name: "Corporate Governance Code", Summary: "Requires large listed companies to disclose governance information.", Authority: "National Securities Commission", Status: "Effective", YearAnnounced: "2007" },
-            { Region: "Americas", Jurisdiction: "br", Issue: "Environmental, Social, Governance", RegulationType: "Corporate ESG Disclosure", Name: "Resolution no. 59", Summary: "Requires listed companies to disclose on ESG and governance topics.", Authority: "Securities and Exchange Commission", Status: "Effective", YearAnnounced: "2021" }
-        ];
-
-        // Grid options including master/detail for expanding rows
-        const gridOptions1 = {
-            columnDefs: columnDefs1,
-            rowData: rowData1,
-            masterDetail: true,
-            detailCellRendererParams: {
-                detailGridOptions: {
-                    columnDefs: [
-                        { headerName: "Full Summary", field: "Summary", flex: 1 }
-                    ]
-                },
-                getDetailRowData: function (params) {
-                    params.successCallback([params.data]);
+                    $("<div>")
+                        .dxDataGrid({
+                            columnAutoWidth: true,
+                            columns: [
+                                { dataField: "Summary", caption: "Summary" }
+                            ],
+                            dataSource: [currentData]
+                        })
+                        .appendTo(container);
                 }
-            },
-            defaultColDef: {
-                flex: 1,
-                minWidth: 100,
-                filter: true,
-                sortable: true,
-                resizable: true
             }
-        };
-
-        // Create the first grid instance
-        new agGrid.Grid(document.getElementById('grid1'), gridOptions1);
-
-        // Define column definitions for the second grid (Appendix)
-        const columnDefs2 = [
-            { headerName: "Name", field: "Name" },
-            { headerName: "Remit", field: "Remit" },
-            { headerName: "Materiality Approach", field: "MaterialityApproach" },
-            { headerName: "Focus", field: "Focus" },
-            { headerName: "Summary", field: "Summary" },
-            { headerName: "Status", field: "Status" },
-            { headerName: "Finalization Date", field: "FinalizationDate" },
-            { headerName: "Latest Update", field: "LatestUpdate" }
-        ];
-
-        const rowData2 = [
-            { Name: "IFRS Sustainability Standards", Remit: "Global", MaterialityApproach: "Double Materiality", Focus: "Environment & Social", Summary: "Sets standards for reporting ESG impacts globally.", Status: "In development", FinalizationDate: "2023", LatestUpdate: "2023" },
-            { Name: "TCFD Framework", Remit: "Global", MaterialityApproach: "Financial Materiality", Focus: "Climate", Summary: "Provides a global framework for climate-related financial disclosures.", Status: "Effective", FinalizationDate: "N/A", LatestUpdate: "2017" }
-        ];
-
-        // Grid options for the second grid
-        const gridOptions2 = {
-            columnDefs: columnDefs2,
-            rowData: rowData2,
-            defaultColDef: {
-                flex: 1,
-                minWidth: 100,
-                filter: true,
-                sortable: true,
-                resizable: true
-            }
-        };
-
-        // Create the second grid instance
-        new agGrid.Grid(document.getElementById('grid2'), gridOptions2);
+        });
     });
 </script>
 
